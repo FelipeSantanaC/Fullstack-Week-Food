@@ -1,8 +1,7 @@
-import { Button } from "@/app/_components/ui/button";
 import { db } from "@/app/_lib/prisma";
-import { ChevronLeftIcon } from "lucide-react";
-import Image from "next/image";
 import { notFound } from "next/navigation";
+import ProductImage from "./_components/product-image";
+import ProductDetails from "./_components/product-details";
 
 interface ProductPageProps {
     params: {
@@ -21,6 +20,17 @@ const ProductPage = async ({params}: ProductPageProps) => {
         }
     })
 
+    const juices = await db.product.findMany({
+        where: {
+            category: {
+                name: 'Sucos'
+            }
+        },
+        include: {
+            restaurant: true,
+        }
+    })
+
     if(!product) {
         return notFound();
     }
@@ -29,32 +39,8 @@ const ProductPage = async ({params}: ProductPageProps) => {
 
     return (
         <div>
-            <div className="relative w-full h-[360px]">
-                <Image
-                src={product.imageUrl}
-                alt={product.name}
-                fill
-                className="object-cover"
-                />
-
-                <Button className="absolute top-4 left-4 rounded-full bg-white text-foreground hover:text-white" size="icon">
-                    <ChevronLeftIcon/>
-                </Button>
-            </div>
-
-            <div className="p-5">
-                <div className="flex items-center gap-[0.375rem]">
-                    <div className="relative h-6 w-6">
-                    <Image
-                    src={product.restaurant.imageUrl}
-                    alt={product.restaurant.name}
-                    fill
-                    className="rounded-full object-cover"
-                    />
-                    </div>
-                    <span className="text-xs text-muted-foreground">{product.restaurant.name}</span>
-                </div>
-            </div>
+            <ProductImage product={product}/>
+            <ProductDetails product={product} complementaryProducts={juices}/>
         </div>
     );
 }

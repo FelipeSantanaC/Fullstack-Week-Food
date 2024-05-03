@@ -1,10 +1,9 @@
 "use client"
 
-import { Prisma, Product } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import { calculateProductTotalPrice, formatCurrency } from "../_helpers/price";
-import { Badge } from "./ui/badge";
-import { ArrowDownIcon, ChevronDown } from "lucide-react";
+import { ArrowDownIcon } from "lucide-react";
 import Link from "next/link";
 
 interface ProductItemProps {
